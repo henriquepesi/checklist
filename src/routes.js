@@ -24,7 +24,7 @@ export default function Routes({route}) {
         <Stack.Screen
           name="List"
           component={List}
-          options={({route}) => ({title: route.params.title})}
+          options={({route}) => ({title: route.params.list})}
         />
       </Stack.Navigator>
     </NavigationContainer>

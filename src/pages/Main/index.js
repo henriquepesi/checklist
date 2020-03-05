@@ -37,7 +37,7 @@ export default function Main({navigation}) {
   };
 
   const handleNavigate = list => {
-    navigation.navigate('List', {...list});
+    navigation.navigate('List', {list});
   };
 
   useEffect(() => {
