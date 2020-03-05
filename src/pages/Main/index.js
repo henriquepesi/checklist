@@ -1,11 +1,13 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
+  ScrollView,
   Text,
   TextInput,
   StyleSheet,
   FlatList,
   Keyboard,
+  RefreshControl,
 } from 'react-native';
 
 import AsyncStorage from '@react-native-community/async-storage';
@@ -14,6 +16,20 @@ import {RectButton} from 'react-native-gesture-handler';
 export default function Main({navigation}) {
   const [checkList, setCheckList] = useState([]);
   const [newCheckList, setNewCheckList] = useState('');
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+
+    wait(1000).then(() => setRefreshing(false));
+  }, [refreshing]);
+
+  function wait(timeout) {
+    return new Promise(resolve => {
+      setTimeout(resolve, timeout);
+    });
+  }
 
   const handleAddCheckList = () => {
     setCheckList([newCheckList, ...checkList]);
@@ -25,19 +41,25 @@ export default function Main({navigation}) {
   };
 
   useEffect(() => {
-    AsyncStorage.setItem('checkList', JSON.stringify(checkList));
-  }, [checkList]);
+    async function storageList() {
+      const checkListStorage = await AsyncStorage.getItem('checklist');
+      if (checkListStorage) {
+        setCheckList(JSON.parse(checkListStorage));
+      }
+    }
+    storageList();
+  }, []);
 
   useEffect(() => {
-    async function getAsyncData() {
-      console.tron.log(await AsyncStorage.getItem('checkList'));
-    }
-
-    getAsyncData();
+    AsyncStorage.setItem('checklist', JSON.stringify(checkList));
   }, [checkList]);
 
   return (
-    <View style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
       <View style={styles.viewForm}>
         <TextInput
           style={styles.formInput}
@@ -64,7 +86,7 @@ export default function Main({navigation}) {
           keyExtractor={item => item}
         />
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
