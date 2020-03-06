@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
+  SafeAreaView,
   ScrollView,
   Text,
   TextInput,
@@ -55,38 +56,40 @@ export default function Main({navigation}) {
   }, [checkList]);
 
   return (
-    <ScrollView
-      style={styles.container}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }>
-      <View style={styles.viewForm}>
-        <TextInput
-          style={styles.formInput}
-          autoCorrect={false}
-          autoCapitalize="none"
-          placeholder="add checklist"
-          onChangeText={text => setNewCheckList(text)}
-          returnKeyType="send"
-          onSubmitEditing={handleAddCheckList}
-        />
-        <RectButton onPress={handleAddCheckList} style={styles.rectButton}>
-          <Text> + </Text>
-        </RectButton>
-      </View>
+    <SafeAreaView>
+      <View
+        style={styles.container}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }>
+        <View style={styles.viewForm}>
+          <TextInput
+            style={styles.formInput}
+            autoCorrect={false}
+            autoCapitalize="none"
+            placeholder="add checklist"
+            onChangeText={text => setNewCheckList(text)}
+            returnKeyType="send"
+            onSubmitEditing={handleAddCheckList}
+          />
+          <RectButton onPress={handleAddCheckList} style={styles.rectButton}>
+            <Text> + </Text>
+          </RectButton>
+        </View>
 
-      <View>
-        <FlatList
-          data={checkList}
-          renderItem={({item}) => (
-            <Text onPress={() => handleNavigate(item)}>
-              <Text>{item}</Text>
-            </Text>
-          )}
-          keyExtractor={item => item}
-        />
+        <View>
+          <FlatList
+            data={checkList}
+            renderItem={({item}) => (
+              <Text onPress={() => handleNavigate(item)}>
+                <Text>{item}</Text>
+              </Text>
+            )}
+            keyExtractor={item => item}
+          />
+        </View>
       </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -103,6 +106,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd',
     paddingLeft: 20,
+    borderRadius: 4,
   },
   viewForm: {
     flexDirection: 'row',

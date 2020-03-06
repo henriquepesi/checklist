@@ -1,7 +1,8 @@
 import React, {useState, useEffect, useCallback} from 'react';
+import CheckBox from '@react-native-community/checkbox';
+
 import {
   View,
-  ScrollView,
   Text,
   TextInput,
   StyleSheet,
@@ -39,7 +40,9 @@ export default function List({route}) {
 
   useEffect(() => {
     async function storageList() {
-      const checkListStorageItem = await AsyncStorage.getItem('checklistitem');
+      const checkListStorageItem = await AsyncStorage.getItem(
+        route.params.list,
+      );
       if (checkListStorageItem) {
         setCheckListItem(JSON.parse(checkListStorageItem));
       }
@@ -48,11 +51,11 @@ export default function List({route}) {
   }, []);
 
   useEffect(() => {
-    AsyncStorage.setItem('checklistitem', JSON.stringify(checkListItem));
+    AsyncStorage.setItem(route.params.list, JSON.stringify(checkListItem));
   }, [checkListItem]);
 
   return (
-    <ScrollView
+    <View
       style={styles.container}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -77,13 +80,14 @@ export default function List({route}) {
           data={checkListItem}
           renderItem={({item}) => (
             <Text>
+              <CheckBox />
               <Text>{item}</Text>
             </Text>
           )}
           keyExtractor={item => item}
         />
       </View>
-    </ScrollView>
+    </View>
   );
 }
 

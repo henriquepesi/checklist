@@ -7,23 +7,27 @@ import List from './pages/List';
 
 const Stack = createStackNavigator();
 
-export default function Routes({route}) {
+export default function Routes() {
   return (
     <NavigationContainer>
       <Stack.Navigator
+        headerShown={false}
+        headerBackground
         screenOptions={{
-          headerTitleStyle: {
-            fontFamily: '',
-          },
-          headerTintColor: 'white',
+          headerTintColor: '#4BD0A5',
           headerTitleAlign: 'center',
-          shadowStyle: 'none',
-          headerStyle: {backgroundColor: '#04D361'},
+          shadowStyle: '50',
+          headerStyle: {
+            backgroundColor: 'transparent',
+            height: 60,
+            elevation: 0,
+          },
         }}>
         <Stack.Screen name="Main" component={Main} />
         <Stack.Screen
           name="List"
           component={List}
+          headerShown={true}
           options={({route}) => ({title: route.params.list})}
         />
       </Stack.Navigator>
