@@ -79,10 +79,10 @@ export default function List({route}) {
         <FlatList
           data={checkListItem}
           renderItem={({item}) => (
-            <Text>
-              <CheckBox />
+            <View>
+              <CheckBox value={true} disabled={false} />
               <Text>{item}</Text>
-            </Text>
+            </View>
           )}
           keyExtractor={item => item}
         />

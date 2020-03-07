@@ -22,6 +22,7 @@ export default function Routes() {
             height: 60,
             elevation: 0,
           },
+          cardStyle: {backgroundColor: '#f1f1f1'},
         }}>
         <Stack.Screen name="Main" component={Main} />
         <Stack.Screen

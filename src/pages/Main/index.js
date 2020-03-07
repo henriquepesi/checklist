@@ -2,7 +2,6 @@ import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   SafeAreaView,
-  ScrollView,
   Text,
   TextInput,
   StyleSheet,
@@ -11,8 +10,12 @@ import {
   RefreshControl,
 } from 'react-native';
 
+import {Background, InputContainer} from './styles';
+
 import AsyncStorage from '@react-native-community/async-storage';
 import {RectButton} from 'react-native-gesture-handler';
+
+import ListItem from '../../components/ListItem';
 
 export default function Main({navigation}) {
   const [checkList, setCheckList] = useState([]);
@@ -34,6 +37,7 @@ export default function Main({navigation}) {
 
   const handleAddCheckList = () => {
     setCheckList([newCheckList, ...checkList]);
+    setNewCheckList('');
     Keyboard.dismiss();
   };
 
@@ -46,6 +50,8 @@ export default function Main({navigation}) {
       const checkListStorage = await AsyncStorage.getItem('checklist');
       if (checkListStorage) {
         setCheckList(JSON.parse(checkListStorage));
+      } else {
+        <Text>shuashu</Text>;
       }
     }
     storageList();
@@ -56,16 +62,17 @@ export default function Main({navigation}) {
   }, [checkList]);
 
   return (
-    <SafeAreaView>
+    <Background>
       <View
         style={styles.container}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }>
-        <View style={styles.viewForm}>
+        <InputContainer style={styles.viewForm}>
           <TextInput
             style={styles.formInput}
             autoCorrect={false}
+            value={newCheckList}
             autoCapitalize="none"
             placeholder="add checklist"
             onChangeText={text => setNewCheckList(text)}
@@ -75,21 +82,20 @@ export default function Main({navigation}) {
           <RectButton onPress={handleAddCheckList} style={styles.rectButton}>
             <Text> + </Text>
           </RectButton>
-        </View>
+        </InputContainer>
 
         <View>
           <FlatList
+            showsVerticalScrollIndicator={false}
             data={checkList}
             renderItem={({item}) => (
-              <Text onPress={() => handleNavigate(item)}>
-                <Text>{item}</Text>
-              </Text>
+              <ListItem onPress={() => handleNavigate(item)} name={item} />
             )}
             keyExtractor={item => item}
           />
         </View>
       </View>
-    </SafeAreaView>
+    </Background>
   );
 }
 
@@ -103,10 +109,9 @@ const styles = StyleSheet.create({
   formInput: {
     flex: 1,
     height: 40,
-    borderWidth: 1,
-    borderColor: '#ddd',
     paddingLeft: 20,
     borderRadius: 4,
+    backgroundColor: '#fff',
   },
   viewForm: {
     flexDirection: 'row',
